@@ -1,3 +1,5 @@
+// import { resolve } from "dns";
+
 class User {
 
     constructor(name, gender, birth, country, email, password, photo, admin){
@@ -73,7 +75,7 @@ class User {
                     this[name] = new Date(json[name]);
                     break;
                 default:
-                    this[name] = json[name];
+                    if (name.substring(0, 1) === '') this[name] = json[name];
             }
         }
     }
@@ -82,82 +84,62 @@ class User {
     // editando informacion del localStorage
     static getUsersStorage() {
 
-        let users = [];
-
-        if (localStorage.getItem("users")) {
-
-            users = JSON.parse(localStorage.getItem("users"));
-
-        }
-
-        return users;
+        return HttpRequest.get('/users');
 
     }
 
 
-    getNewID() {
+    toJSON() { // consierte el objeto instanciado en json
 
-        let usersID = parseInt(localStorage.getItem("userID")); // se elimino un item del localStorage, el muda su id
+        let json = {};
 
-        if (!usersID > 0) usersID = 0;
+        Object.keys(this).forEach(key => {
 
-        usersID++;
+            if (this[key] !== undefined) json[key] = this[key];
 
-        localStorage.setItem("usersID", usersID); // guardar el ultimo id que generamos
+        });
 
-        return usersID;
+        return json;
 
     }
 
 
     save() {
 
-        let users = User.getUsersStorage();
+        return new Promise((resolve, reject) => {
 
-        if (this.Id > 0) { // llave unica para identificar usuario
+            let promise;
+    
+            if (this.id) {
+    
+                promise = HttpRequest.put(`/users/${this.id}`, this.toJSON());
+    
+            } else {
+    
+                promise = HttpRequest.put(`/users`, this.toJSON());
+    
+            }
+    
+            promise.then(data => {
+    
+                this.loadFromJSON(data);
 
-            users.map(u => { // retorna los datos del item en el array
+                resolve(this); // manda el propio objeto instanciado
+    
+            }).catch(e => {
 
-                if (u._id == this.id) {
-
-                    Object.assign(u, this);
-
-                }
-                
-                return u;
+                reject(e);
 
             });
 
-        } else {
-
-            this._id = this.getNewID();
-
-            users.push(this);
-
-        }
-
-        //sessionStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("users", JSON.stringify(users)); // llave, valor
+        });
 
     }
 
 
     remove() {
-        
-        let users = User.getUsersStorage();
 
-        users.foreEach((userData, index) => {
-
-            if (this._id == userData._id) {
-
-                users.splice(index, 1); // remover un item del array de localStorage
-
-            }
-
-        });
-
-        //sessionStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("users", JSON.stringify(users)); // llave, valor
+        return HttpRequest.delete(`/users/${this.id}`);
 
     }
 

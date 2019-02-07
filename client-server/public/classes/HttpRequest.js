@@ -25,17 +25,17 @@ class HttpRequest {
     }
 
 
-    static request(method, url, param = {}) {
+    static request(method, url, params = {}) {
 
         return new Promise((resolve, reject) => { // promise que retorna
 
-            let ajax = new XMLHttpRequest;
+            let ajax = new XMLHttpRequest();
 
             ajax.open(method.toUpperCase(), url);
 
             ajax.onerror = event => {
     
-                reject(e);
+                reject(event);
 
             };
     
@@ -58,8 +58,10 @@ class HttpRequest {
                 resolve(obj);
     
             };
+
+            ajax.setRequestHeader('Content-Type', 'application/json'); // setea el headers
     
-            ajax.send(); // llama a la solicitud ajax
+            ajax.send(JSON.stringify(params)); // llama a la solicitud ajax
 
         });
 
