@@ -75,7 +75,7 @@ class User {
                     this[name] = new Date(json[name]);
                     break;
                 default:
-                    if (name.substring(0, 1) === '') this[name] = json[name];
+                    if (name.substring(0, 1) === '_') this[name] = json[name];
             }
         }
     }
@@ -84,7 +84,7 @@ class User {
     // editando informacion del localStorage
     static getUsersStorage() {
 
-        return HttpRequest.get('/users');
+        return Fetch.get('/users');
 
     }
 
@@ -112,11 +112,11 @@ class User {
     
             if (this.id) {
     
-                promise = HttpRequest.put(`/users/${this.id}`, this.toJSON());
+                promise = Fetch.put(`/users/${this.id}`, this.toJSON());
     
             } else {
     
-                promise = HttpRequest.put(`/users`, this.toJSON());
+                promise = Fetch.put(`/users`, this.toJSON());
     
             }
     
@@ -139,7 +139,7 @@ class User {
 
     remove() {
 
-        return HttpRequest.delete(`/users/${this.id}`);
+        return Fetch.delete(`/users/${this.id}`);
 
     }
 
