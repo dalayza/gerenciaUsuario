@@ -27,12 +27,10 @@ class Fetch {
 
     static request(method, url, params = {}) {
 
-        return new Promise((resolve, reject) => { // promise que retorna
-
             let request;
 
             // verifica si es metodo GET no tiene body
-            switch(method.ToLowerCase()) {
+            switch(method) {
 
                 case 'GET':
                     request = url;
@@ -41,11 +39,11 @@ class Fetch {
                 default: 
                     request = new Request(url, {
         
-                        method,
+                        method: method,
                         body: JSON.stringify(params),
                         headers: new Headers({
         
-                            'COntent-Type': 'application/json'
+                            'Content-Type': 'application/json'
         
                         })
         
@@ -53,25 +51,28 @@ class Fetch {
 
             }
 
-            fetch(request).then(response => {
 
-                response.json().then(json => {
+            return new Promise((resolve, reject) => { // promise que retorna
 
-                    resolve(json);
+                fetch(request).then(response => {
 
-                }).catch(e => {
+                    response.json().then(json => {
 
-                    reject(e);
+                        resolve(json);
 
+                    }).catch(e => {
+
+                        reject(e);
+
+                    });
+                
                 });
 
             }).catch(e => {
 
                 reject(e);
 
-            });;
-
-        });
+            });
 
     }
 

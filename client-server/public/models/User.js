@@ -116,7 +116,7 @@ class User {
     
             } else {
     
-                promise = Fetch.put(`/users`, this.toJSON());
+                promise = Fetch.post(`/users`, this.toJSON());
     
             }
     

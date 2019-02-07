@@ -35,7 +35,7 @@ class HttpRequest {
 
             ajax.onerror = event => {
     
-                reject(event);
+                reject(e);
 
             };
     
@@ -51,7 +51,7 @@ class HttpRequest {
     
                     reject(e);
 
-                    console.error(e);
+                    console.log('Erro: ' + e);
     
                 }
 

@@ -93,7 +93,7 @@ class UserController {
 
             let values = this.getValues(this.formEl);   
 
-            values.photo = ""; // leer contenido de la foto
+            // values.photo = ""; // leer contenido de la foto
 
             if (!values) return false;
             
@@ -161,54 +161,53 @@ class UserController {
 
         });
 
-        
-
     }
 
 
-    getValues(formEl) {
+    getValues(formEl){
 
         let user = {};
         let isValid = true;
 
-        [...formEl.elements].forEach((field, index) => { // ... agrega items que tenga el arreglo SPREAD
+        [...formEl.elements].forEach((field, index) => {
 
             if (['name', 'email', 'password'].indexOf(field.name) > -1 && !field.value) {
 
-                field.parentElement.classList.add('has-error'); 
-
+                field.parentElement.classList.add('has-error');
                 isValid = false;
 
             }
-            
+
             if (field.name == "gender") {
-        
+
                 if (field.checked) {
                     user[field.name] = field.value;
                 }
-        
-            } else if (field.name == "admin") {
+
+            } else if(field.name == "admin") {
+
                 user[field.name] = field.checked;
+
             } else {
+
                 user[field.name] = field.value;
+
             }
-        
+
         });
 
         if (!isValid) {
-
             return false;
-
         }
 
         return new User(
-            user.name, 
-            user.gender, 
-            user.birth, 
-            user.email, 
-            user.country, 
-            user.password, 
-            user.photo, 
+            user.name,
+            user.gender,
+            user.birth,
+            user.country,
+            user.email,
+            user.password,
+            user.photo,
             user.admin
         );
 
@@ -217,7 +216,7 @@ class UserController {
 
     selectAll() { // responsable de tomar todas las informaciones de usuarios
 
-        users.getUsersStorage().then(data => { // promise y toma json (data)
+        User.getUsersStorage().then(data => { // promise y toma json (data)
 
             data.users.forEach(dataUser => {
         
@@ -322,9 +321,9 @@ class UserController {
 
                 if (field) {
 
-                    if(field.type == 'file') continue;
+                    // if(field.type == 'file') continue;
 
-                    switch (field.filter) {
+                    switch (field.type) {
 
                         case 'file':
                             continue;
