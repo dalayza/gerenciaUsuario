@@ -213,25 +213,9 @@ class UserController {
 
         // let users = this.getUsersStorage();
 
-        let ajax = new XMLHttpRequest;
+        HttpRequest.get('/users').then(data => { // promise y toma json (data)
 
-        ajax.open('GET', '/users');
-
-        ajax.onload = event => { // configura evento de respuesta
-
-            let obj = { users: [] };
-
-            try { // validar si es JSON valido
-
-                obj = JSON.parse(ajax.responseText);
-
-            } catch(e) {
-
-                console.error(e);
-
-            }
-
-            obj.users.forEach(dataUser => {
+            data.users.forEach(dataUser => {
         
                     let user  = new User();
         
@@ -241,9 +225,7 @@ class UserController {
         
                 });
 
-        };
-
-        ajax.send(); // llama a la solicitud ajax
+        });
 
     }
 
