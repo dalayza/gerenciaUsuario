@@ -38,7 +38,7 @@ class User {
     }
 
     get email() {
-        return this._country;
+        return this._email;
     }
 
     get password() {
